@@ -155,30 +155,18 @@ class CompareProductPageLoader
                 $propertyGroup->setId($group->getId());
                 $propertyGroup->setTranslated($group->getTranslated());
 
+                $propertyGroup->setPosition($group->getPosition());
+
                 $properties->add($propertyGroup);
             }
         }
 
         $properties->sort(function (PropertyGroupEntity $a, PropertyGroupEntity $b) {
-            $nameA = $a->getTranslation('name');
-            $nameB = $b->getTranslation('name');
+            $positionA = $a->getPosition() ?? 0;
+            $positionB = $b->getPosition() ?? 0;
 
-            if (!\is_string($nameA) || !\is_string($nameB)) {
-                return 0;
-            }
-
-            if ($a->getTranslation('name') === $b->getTranslation('name')) {
-                $positionA = $a->getTranslation('position');
-                $positionB = $b->getTranslation('position');
-
-                if (!\is_int($positionA) || !\is_int($positionB)) {
-                    return 0;
-                }
-
-                return $positionA - $positionB;
-            }
-
-            return strcasecmp($nameA, $nameB);
+            return $positionA <=> $positionB;
+            
         });
 
         return $properties;

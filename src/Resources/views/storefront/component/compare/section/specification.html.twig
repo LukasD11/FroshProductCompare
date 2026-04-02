@@ -1,3 +1,4 @@
+
 {% block frosh_product_compare_specification_section %}
     <tbody id="specification">
         <tr>
@@ -10,14 +11,35 @@
             <th colspan="{{ productsCount }}"></th>
         </tr>
 
+        {% set groupedProperties = {} %}
         {% for property in page.properties %}
+            {% set category = property.translated.customFields.custom_prodanet_category ?? property.customFields.custom_prodanet_category ?? 'Allgemein' %}
+            
+            {% set currentGroup = groupedProperties[category] ?? [] %}
+            {% set currentGroup = currentGroup|merge([property]) %}
+            {% set groupedProperties = groupedProperties|merge({ (category): currentGroup }) %}
+        {% endfor %}
+
+       {% for categoryName, propertiesInCategory in groupedProperties %}
+            
             <tr class="property collapseSpecifications accordion-collapse collapse show" data-bs-parent="#specification">
-                <th>{{ property.translated.name|e }}</th>
-                {% sw_include '@Storefront/storefront/component/compare/partial/properties.html.twig' with {
-                    property: property,
-                    linePropertyId: property.id,
-                } %}
+                <th colspan="{{ productsCount + 1 }}" class="text-start">
+                    <strong>{{ categoryName }}</strong>
+                </th>
             </tr>
+
+    
+            {% for property in propertiesInCategory %}
+                <tr class="property collapseSpecifications accordion-collapse collapse show" data-bs-parent="#specification">
+                    <th style="padding-left: 20px; font-weight: normal;">{{ property.translated.name|e }}</th>
+                    
+                    {% sw_include '@Storefront/storefront/component/compare/partial/properties.html.twig' with {
+                        property: property,
+                        linePropertyId: property.id,
+                    } %}
+                </tr>
+            {% endfor %}
+
         {% endfor %}
 
 
@@ -30,7 +52,7 @@
                         customField: customField,
                     } %}
                 </tr>
-            {% endif %}
+            {% endif %} 
         {% endfor %}
     </tbody>
 {% endblock %}
