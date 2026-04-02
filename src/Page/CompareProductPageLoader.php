@@ -155,12 +155,14 @@ class CompareProductPageLoader
                 $propertyGroup->setId($group->getId());
                 $propertyGroup->setTranslated($group->getTranslated());
 
+               // Copy the sorting position from the Shopware Admin
                 $propertyGroup->setPosition($group->getPosition());
 
                 $properties->add($propertyGroup);
             }
         }
 
+        // Sorting the propertoes based on the position (nummerical value)
         $properties->sort(function (PropertyGroupEntity $a, PropertyGroupEntity $b) {
             $positionA = $a->getPosition() ?? 0;
             $positionB = $b->getPosition() ?? 0;

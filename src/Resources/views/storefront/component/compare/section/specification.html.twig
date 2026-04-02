@@ -11,6 +11,7 @@
             <th colspan="{{ productsCount }}"></th>
         </tr>
 
+        {# Create the structure of the table by reading prodanet_category and add properties to each category #}
         {% set groupedProperties = {} %}
         {% for property in page.properties %}
             {% set category = property.translated.customFields.custom_prodanet_category ?? property.customFields.custom_prodanet_category ?? 'Allgemein' %}
@@ -22,6 +23,7 @@
 
        {% for categoryName, propertiesInCategory in groupedProperties %}
             
+            {# Create the headline for each Category, which spans over the haul tbale #}
             <tr class="property collapseSpecifications accordion-collapse collapse show" data-bs-parent="#specification">
                 <th colspan="{{ productsCount + 1 }}" class="text-start">
                     <strong>{{ categoryName }}</strong>
